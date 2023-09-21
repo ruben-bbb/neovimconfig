@@ -25,6 +25,7 @@ vim.o.showmode = true
 vim.o.showcmd = true
 vim.o.showmatch = true
 vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
+    group = vim.api.nvim_create_augroup('RestoreCursorPosition', {}),
     pattern = '*',
     command = 'silent! normal! g`"zv'
 })
@@ -43,6 +44,7 @@ vim.o.hlsearch = true
 vim.o.spelllang = 'en_au'
 vim.cmd.colorscheme 'sonokai'
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+    group = vim.api.nvim_create_augroup('SpellcheckOn', {}),
     pattern = { "*.md" },
     command = "setlocal spell spelllang=en_au"
 })
@@ -61,16 +63,11 @@ require("mason-lspconfig").setup_handlers {
     -- The first entry (without a key) will be the default handler
     -- and will be called for each installed server that doesn't have
     -- a dedicated handler.
-    function(server_name)  -- default handler (optional)
+    function(server_name) -- default handler (optional)
         require("lspconfig")[server_name].setup {
             capabilities = require('cmp_nvim_lsp').default_capabilities()
         }
     end,
-    -- Next, you can provide a dedicated handler for specific servers.
-    -- For example, a handler override for the `rust_analyzer`:
-    ["rust_analyzer"] = function()
-        require("rust-tools").setup {}
-    end
 }
 
 -- Global mappings.
